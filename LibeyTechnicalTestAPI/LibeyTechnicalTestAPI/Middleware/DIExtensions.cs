@@ -1,4 +1,5 @@
-﻿using LibeyTechnicalTestDomain.LibeyUserAggregate.Application;
+﻿using LibeyTechnicalTestDomain.EFCore.Mappers;
+using LibeyTechnicalTestDomain.LibeyUserAggregate.Application;
 using LibeyTechnicalTestDomain.LibeyUserAggregate.Application.Interfaces;
 using LibeyTechnicalTestDomain.LibeyUserAggregate.Infrastructure;
 namespace LibeyTechnicalTestAPI.Middleware
@@ -9,6 +10,10 @@ namespace LibeyTechnicalTestAPI.Middleware
         {
             services.AddTransient<ILibeyUserAggregate, LibeyUserAggregate>();
             services.AddTransient<ILibeyUserRepository, LibeyUserRepository>();
+            services.AddTransient<IUbigeoAggregate, UbigeoAggregate>();
+            services.AddTransient<IUbigeoRepository, UbigeoRepository>(); 
+            services.AddTransient<IDocumentTypeAggregate, DocumentTypeAggregate>();
+            services.AddTransient<IDocumentTypeRepository, DocumentTypeRepository>(); 
             return services;
         }
     }

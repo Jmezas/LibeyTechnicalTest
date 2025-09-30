@@ -1,9 +1,9 @@
-<form #userForm="ngForm" style="padding-right: 5%; padding-left: 5%; ">
-	<div class="card" style="width: 100%;margin-top: 2rem;background-color:#edf2f6;border-radius: 10px; height: 70em; " >
-		<div class="card-header"><b>Mantenimiento de usuario</b></div>
+<form [formGroup]="userForm" (ngSubmit)="Submit()" style="padding-right: 5%; padding-left: 5%;">
+	<div class="card" style="width: 100%;margin-top: 2rem;background-color:#edf2f6;border-radius: 10px; height: 70em;">
+		<div class="card-header"><b>{{ formTitle }}</b></div>
 		<div class="card mb-4 mt-4">
 			<ul class="nav">
-				<button type="button" class="btn-toolbar" (click)="Submit()">
+				<button type="submit" class="btn-toolbar">
 					<a class="nav-link text-toolbar">
 						<span>
 							<svg width="20" height="17" viewBox="0 0 14 14" fill="none">
@@ -20,7 +20,7 @@
 						Guardar
 					</a>
 				</button>
-				<button type="button" class="btn-toolbar">
+				<button type="button" class="btn-toolbar" (click)="onClear()">
 					<a class="nav-link text-toolbar">
 						<span>
 							<svg width="20" height="17" viewBox="0 0 14 14" fill="none">
@@ -37,7 +37,7 @@
 						Limpiar
 					</a>
 				</button>
-				<button type="button" class="btn-toolbar">
+				<button type="button" class="btn-toolbar" (click)="onBack()">
 					<a class="nav-link text-toolbar">
 						<span>
 							<svg width="20" height="17" viewBox="0 0 14 14" fill="none">
@@ -57,58 +57,177 @@
 			</ul>
 		</div>
 		<div class="card-body">
+			<!-- Tipo de documento y Número de documento -->
 			<div class="row pb-2 pr-2">
 				<div class="col-lg-2">Tipo de documento</div>
 				<div class="col-lg-4">
-					<ng-select placeholder="Seleccione" class="ng-select-solid" name="CreditDebitNoteReasonTypeId" required>
-						<ng-option value="1">Lima</ng-option>
+					<ng-select
+						placeholder="Seleccione"
+						class="ng-select-solid"
+						formControlName="documentTypeId"
+						[class.is-invalid]="isFieldInvalid('documentTypeId')">
+						<ng-option *ngFor="let item of listDocumentTypes" [value]="item.documentTypeId">
+							{{ item.documentTypeDescription }}
+						</ng-option>
 					</ng-select>
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('documentTypeId')">
+						{{ getErrorMessage('documentTypeId') }}
+					</div>
 				</div>
 				<div class="col-lg-2">Número de documento</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="documentNumber"
+						[class.is-invalid]="isFieldInvalid('documentNumber')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('documentNumber')">
+						{{ getErrorMessage('documentNumber') }}
+					</div>
+				</div>
 			</div>
+
+			<!-- Nombre y Apellido Paterno -->
 			<div class="row pb-2">
 				<div class="col-lg-2">Nombre</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="firstName"
+						[class.is-invalid]="isFieldInvalid('firstName')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('firstName')">
+						{{ getErrorMessage('firstName') }}
+					</div>
+				</div>
 				<div class="col-lg-2">Apellido Paterno</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="paternalSurname"
+						[class.is-invalid]="isFieldInvalid('paternalSurname')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('paternalSurname')">
+						{{ getErrorMessage('paternalSurname') }}
+					</div>
+				</div>
 			</div>
+
+			<!-- Apellido Materno y Dirección -->
 			<div class="row pb-2">
 				<div class="col-lg-2">Apellido Materno</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="maternalSurname"
+						[class.is-invalid]="isFieldInvalid('maternalSurname')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('maternalSurname')">
+						{{ getErrorMessage('maternalSurname') }}
+					</div>
+				</div>
 				<div class="col-lg-2">Dirección</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="address"
+						[class.is-invalid]="isFieldInvalid('address')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('address')">
+						{{ getErrorMessage('address') }}
+					</div>
+				</div>
 			</div>
+
+			<!-- Departamento y Provincia -->
 			<div class="row pb-2">
 				<div class="col-lg-2">Departamento</div>
 				<div class="col-lg-4">
-					<ng-select placeholder="Seleccione" class="ng-select-solid" name="CreditDebitNoteReasonTypeId" required>
-						<ng-option value="1">Lima</ng-option>
+					<ng-select
+						placeholder="Seleccione"
+						class="ng-select-solid"
+						formControlName="regionCode"
+						[class.is-invalid]="isFieldInvalid('regionCode')">
+						<ng-option *ngFor="let item of listRegions" [value]="item.regionCode">
+							{{ item.regionDescription }}
+						</ng-option>
 					</ng-select>
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('regionCode')">
+						{{ getErrorMessage('regionCode') }}
+					</div>
 				</div>
 				<div class="col-lg-2">Provincia</div>
 				<div class="col-lg-4">
-					<ng-select placeholder="Seleccione" class="ng-select-solid" name="CreditDebitNoteReasonTypeId" required>
-						<ng-option value="1">Lima</ng-option>
+					<ng-select
+						placeholder="Seleccione"
+						class="ng-select-solid"
+						formControlName="provinceCode"
+						[class.is-invalid]="isFieldInvalid('provinceCode')">
+						<ng-option *ngFor="let item of listProvinces" [value]="item.provinceCode">
+							{{ item.provinceDescription }}
+						</ng-option>
 					</ng-select>
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('provinceCode')">
+						{{ getErrorMessage('provinceCode') }}
+					</div>
 				</div>
 			</div>
+
+			<!-- Distrito y Teléfono -->
 			<div class="row pb-2">
 				<div class="col-lg-2">Distrito</div>
 				<div class="col-lg-4">
-					<ng-select placeholder="Seleccione" class="ng-select-solid" name="CreditDebitNoteReasonTypeId" required>
-						<ng-option value="1">Villa el salvador</ng-option>
+					<ng-select
+						placeholder="Seleccione"
+						class="ng-select-solid"
+						formControlName="districtCode"
+						[class.is-invalid]="isFieldInvalid('districtCode')">
+						<ng-option *ngFor="let item of listDistricts" [value]="item.ubigeoCode">
+							{{ item.ubigeoDescription }}
+						</ng-option>
 					</ng-select>
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('districtCode')">
+						{{ getErrorMessage('districtCode') }}
+					</div>
 				</div>
 				<div class="col-lg-2">Telefono</div>
-				<div class="col-lg-4"><input type="text" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="text"
+						class="form-control form-control-sm"
+						formControlName="phone"
+						[class.is-invalid]="isFieldInvalid('phone')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('phone')">
+						{{ getErrorMessage('phone') }}
+					</div>
+				</div>
 			</div>
+
+			<!-- Correo y Contraseña -->
 			<div class="row pb-2">
 				<div class="col-lg-2">Correo</div>
-				<div class="col-lg-4"><input type="email" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="email"
+						class="form-control form-control-sm"
+						formControlName="email"
+						[class.is-invalid]="isFieldInvalid('email')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+						{{ getErrorMessage('email') }}
+					</div>
+				</div>
 				<div class="col-lg-2">Contraseña</div>
-				<div class="col-lg-4"><input type="password" class="form-control form-control-sm" /></div>
+				<div class="col-lg-4">
+					<input
+						type="password"
+						class="form-control form-control-sm"
+						formControlName="password"
+						[class.is-invalid]="isFieldInvalid('password')" />
+					<div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+						{{ getErrorMessage('password') }}
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 </form>

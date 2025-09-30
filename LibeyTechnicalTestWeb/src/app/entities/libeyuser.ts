@@ -1,3 +1,8 @@
+import { DocumentDto } from "./documentDto";
+import { Province } from "./province";
+import { Region } from "./region";
+import { Ubigeo } from "./ubigeo";
+
 export interface LibeyUser{
     documentNumber:string;
     documentTypeId:number;
@@ -6,10 +11,29 @@ export interface LibeyUser{
     mothersLastName :string;
     address :string;
     regionCode :string;
-    provinceCode :string;       
+    provinceCode :string;
     ubigeoCode :string;
     phone :string;
     email :string;
     password :string;
     active :boolean;
+}
+
+export interface LibeyUserResponse{
+  documentNumber:string;
+    documentTypeId:number;
+    name:string;
+    fathersLastName :string;
+    mothersLastName :string;
+    address :string;
+    regionCode :string;
+    provinceCode :string;
+    ubigeoCode :string;
+    phone :string;
+    email :string;
+    active :boolean;
+    documentType:DocumentDto;
+    region:Region;
+    province:Province;
+    ubigeo:Ubigeo;
 }

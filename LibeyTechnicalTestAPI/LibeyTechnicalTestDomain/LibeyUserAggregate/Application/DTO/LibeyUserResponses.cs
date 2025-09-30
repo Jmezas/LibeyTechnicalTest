@@ -9,11 +9,18 @@
         public string MothersLastName { get; init; }
         public string Address { get; init; }
         public string RegionCode { get; init; }
-        public string ProvinceCode { get; init; }       
+        public string ProvinceCode { get; init; }
         public string UbigeoCode { get; init; }
         public string Phone { get; init; }
         public string Email { get; init; }
         public string Password { get; init; }
         public bool Active { get; init; }
+
+        public DocumentTypeResponse? DocumentType { get; set; }
+
+        public ProvinceResponse? Province { get; set; }
+        public RegionResponse? Region { get; set; }
+
+        public UbigeoResponse? Ubigeo { get; set; }
     }
 }

@@ -1,0 +1,173 @@
+<div style="padding-right: 5%; padding-left: 5%;">
+	<div class="card" style="width: 100%;margin-top: 2rem;background-color:#edf2f6;border-radius: 10px;">
+		<div class="card-header"><b>Lista de Usuarios</b></div>
+
+		<!-- Barra de herramientas -->
+		<div class="card mb-4 mt-4">
+			<ul class="nav">
+				<button type="button" class="btn-toolbar" (click)="onNew()">
+					<a class="nav-link text-toolbar">
+						<span>
+							<svg width="20" height="17" viewBox="0 0 14 14" fill="none">
+								<path d="M7 1V13M1 7H13" stroke="#38E8C6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</span>
+						Nuevo
+					</a>
+				</button>
+				<button type="button" class="btn-toolbar" (click)="loadUsers()">
+					<a class="nav-link text-toolbar">
+						<span>
+							<svg width="20" height="17" viewBox="0 0 14 14" fill="none">
+								<path d="M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1" stroke="#38E8C6" stroke-width="2" stroke-linecap="round"/>
+								<path d="M13 1V5H9" stroke="#38E8C6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</span>
+						Actualizar
+					</a>
+				</button>
+			</ul>
+		</div>
+
+		<!-- Buscador -->
+		<div class="card-body">
+			<div class="row mb-4">
+				<div class="col-lg-6">
+					<div class="input-group">
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Buscar por documento, nombre, email o teléfono..."
+							[(ngModel)]="searchTerm"
+							(keyup.enter)="onSearch()">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button" (click)="onSearch()">
+								<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+									<path d="M7 13C10.3137 13 13 10.3137 13 7C13 3.68629 10.3137 1 7 1C3.68629 1 1 3.68629 1 7C1 10.3137 3.68629 13 7 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M15 15L11.5 11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</button>
+							<button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" *ngIf="searchTerm">
+								✕
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 text-right">
+					<span class="text-muted">Total de usuarios: <strong>{{ totalItems }}</strong></span>
+				</div>
+			</div>
+
+			<!-- Loading -->
+			<div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border" style="color: #38E8C6; width: 3rem; height: 3rem;" role="status">
+          <span class="sr-only"></span>
+        </div>
+        <p class="mt-3 text-muted">Cargando información del usuario...</p>
+      </div>
+
+			<!-- Tabla de usuarios -->
+			<div *ngIf="!isLoading" class="table-responsive">
+				<table class="table table-hover table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th width="5%">#</th>
+							<th width="10%">Documento</th>
+							<th width="20%">Nombre Completo</th>
+							<th width="15%">Email</th>
+							<th width="10%">Teléfono</th>
+							<th width="15%">Ubicación</th>
+							<th width="10%">Estado</th>
+							<th width="15%" class="text-center">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let user of paginatedUsers; let i = index">
+							<td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+							<td>
+								<small class="text-muted">{{ user.documentType.documentTypeDescription }}</small><br>
+								<strong>{{ user.documentNumber }}</strong>
+							</td>
+							<td>
+								{{ user.name }} {{ user.fathersLastName }} {{ user.mothersLastName }}
+							</td>
+							<td>
+								<small>{{ user.email }}</small>
+							</td>
+							<td>{{ user.phone }}</td>
+							<td>
+								<small>{{ user.region.regionDescription }}, {{ user.province.provinceDescription }} , {{ user.ubigeo.ubigeoDescription }}</small>
+							</td>
+							<td>
+								<span
+									class="badge"
+                  [ngClass]="user.active ? 'badge-success' : 'badge-secondary'">
+									{{ user.active ? 'Activo' : 'Inactivo' }}
+								</span>
+							</td>
+							<td class="text-center">
+								<button
+									class="btn btn-sm btn-outline-primary mr-2"
+									(click)="onEdit(user)"
+									title="Editar">
+									<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+										<path d="M10 1L13 4L4.5 12.5L1 13L1.5 9.5L10 1Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</button>
+								<button
+									class="btn btn-sm btn-outline-danger"
+									(click)="onDelete(user)"
+									title="Eliminar">
+									<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+										<path d="M1 3.5H13M5.5 6V10.5M8.5 6V10.5M2 3.5H12L11 13H3L2 3.5ZM5 3.5V1.5C5 1.22386 5.22386 1 5.5 1H8.5C8.77614 1 9 1.22386 9 1.5V3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</button>
+							</td>
+						</tr>
+						<tr *ngIf="paginatedUsers.length === 0">
+							<td colspan="8" class="text-center py-5">
+								<p class="text-muted mb-0">No se encontraron usuarios</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Paginación -->
+			<div class="row mt-4" *ngIf="totalPages > 1">
+				<div class="col-12">
+					<nav aria-label="Paginación de usuarios">
+						<ul class="pagination justify-content-center">
+							<li class="page-item" [class.disabled]="currentPage === 1">
+								<a class="page-link" (click)="changePage(currentPage - 1)" style="cursor: pointer;">
+									Anterior
+								</a>
+							</li>
+
+							<li
+								*ngFor="let page of [].constructor(totalPages); let i = index"
+								class="page-item"
+								[class.active]="currentPage === i + 1">
+								<a class="page-link" (click)="changePage(i + 1)" style="cursor: pointer;">
+									{{ i + 1 }}
+								</a>
+							</li>
+
+							<li class="page-item" [class.disabled]="currentPage === totalPages">
+								<a class="page-link" (click)="changePage(currentPage + 1)" style="cursor: pointer;">
+									Siguiente
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-12 text-center">
+					<small class="text-muted">
+						Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} -
+						{{ Math.min(currentPage * itemsPerPage, totalItems) }} de {{ totalItems }} usuarios
+					</small>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

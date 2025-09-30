@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace LibeyTechnicalTestDomain.EFCore.Configuration;
 
 
-public class DocumentTypeCongifuration: IEntityTypeConfiguration<DocumentType>
+public class DocumentTypeConfiguration: IEntityTypeConfiguration<DocumentType>
 {
     public void Configure(EntityTypeBuilder<DocumentType> builder)
     {

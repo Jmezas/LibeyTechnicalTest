@@ -1,8 +1,11 @@
 using LibeyTechnicalTestAPI.Middleware;
 using LibeyTechnicalTestDomain.EFCore;
+using LibeyTechnicalTestDomain.EFCore.Mappers;
 using Microsoft.EntityFrameworkCore;
 IConfigurationRoot config = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").AddEnvironmentVariables().Build();
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile).Assembly);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
@@ -15,6 +18,7 @@ builder.Services.AddCors(options =>
         builder.AllowAnyHeader();
     });
 });
+
 builder.Services.AddSwaggerGen();
 DIExtensions.AddConfigurations(builder.Services);
 builder.Services.AddDbContext<Context>(options =>
@@ -32,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ResponseMiddleware>();
 app.UseCors("localCors");
 app.UseRouting();
 app.MapControllers();

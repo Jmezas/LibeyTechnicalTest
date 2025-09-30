@@ -22,8 +22,38 @@ namespace LibeyTechnicalTestAPI.Controllers.LibeyUser
         [HttpPost]       
         public IActionResult Create(UserUpdateorCreateCommand command)
         {
-             _aggregate.Create(command);
+            var result = _aggregate.Create(command);
+           
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+        
+        [HttpPut]
+        public IActionResult Update(UserUpdateorCreateCommand command)
+        {
+            var result = _aggregate.Update(command);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+        
+        [HttpDelete]
+        [Route("{documentNumber}")]
+        public IActionResult Delete(string documentNumber)
+        {
+            _aggregate.Delete(documentNumber);
             return Ok(true);
+        }
+        
+        [HttpGet("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _aggregate.GetAllUsersAsync();
+            return Ok(result);
         }
     }
 }

@@ -12,7 +12,7 @@
         public string Phone { get; private set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
-        public bool Active { get; private set; }
+        public bool Active { get; set; }
         public LibeyUser(string documentNumber, int documentTypeId, string name, string fathersLastName, string mothersLastName, string address,
         string ubigeoCode, string phone, string email, string password)
         {
